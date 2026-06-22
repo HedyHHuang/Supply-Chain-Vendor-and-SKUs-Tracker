@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -10,149 +9,193 @@
     <link rel="stylesheet" href="./css/base.css" />
     <link rel="stylesheet" href="./css/forms.css" />
     <link rel="stylesheet" href="./css/vendors.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <nav aria-label="Main navigation">
-            <a href="./index.html">Home</a>
-            <a href="./vendors.html">Vendors</a>
-            <a href="./items.html">Items</a>
-        </nav>
+      <nav aria-label="Main navigation">
+        <a href="./index.html">Home</a>
+        <a href="./vendors.html">Vendors</a>
+        <a href="./items.html">Items</a>
+      </nav>
     </header>
 
     <main>
-        <section class="page-header">
-            <div>
-                <h1>Vendor Management</h1>
+      <section class="page-header">
+        <div>
+          <h1>Vendor Management</h1>
 
-                <p>
-                    Manage vendor contacts, product categories, ratings, delivery
-                    observations, notes, and associated SKUs.
-                </p>
+          <p>
+            Manage vendor contacts, product categories, ratings, delivery
+            observations, notes, and associated SKUs.
+          </p>
+        </div>
+
+        <button
+          id="show-vendor-form-button"
+          class="primary-button"
+          type="button"
+        >
+          + New Vendor
+        </button>
+      </section>
+
+      <section
+        id="vendor-form-panel"
+        class="form-panel hidden"
+        aria-labelledby="vendor-form-heading"
+      >
+        <div class="form-header">
+          <h2 id="vendor-form-heading">Add a New Vendor</h2>
+
+          <p>
+            Enter the vendor's contact information, product capabilities, and
+            sourcing notes.
+          </p>
+        </div>
+
+        <form id="vendor-form">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="vendor-name">Vendor Name</label>
+
+              <input
+                id="vendor-name"
+                name="vendorName"
+                type="text"
+                placeholder="Example: Pacific Food Supply"
+                required
+              />
             </div>
 
-            <button id="show-vendor-form-button" class="primary-button" type="button">
-                + New Vendor
-            </button>
-        </section>
+            <div class="form-field">
+              <label for="contact-person">Contact Person</label>
 
-        <section id="vendor-form-panel" class="form-panel hidden" aria-labelledby="vendor-form-heading">
-            <div class="form-header">
-                <h2 id="vendor-form-heading">Add a New Vendor</h2>
-
-                <p>
-                    Enter the vendor's contact information, product capabilities, and
-                    sourcing notes.
-                </p>
+              <input
+                id="contact-person"
+                name="contactPerson"
+                type="text"
+                placeholder="Example: Amy Lee"
+              />
             </div>
 
-            <form id="vendor-form">
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="vendor-name">Vendor Name</label>
+            <div class="form-field">
+              <label for="vendor-email">Email</label>
 
-                        <input id="vendor-name" name="vendorName" type="text" placeholder="Example: Pacific Food Supply"
-                            required />
-                    </div>
+              <input
+                id="vendor-email"
+                name="email"
+                type="email"
+                placeholder="amy@example.com"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="contact-person">Contact Person</label>
+            <div class="form-field">
+              <label for="vendor-phone">Phone</label>
 
-                        <input id="contact-person" name="contactPerson" type="text" placeholder="Example: Amy Lee" />
-                    </div>
+              <input
+                id="vendor-phone"
+                name="phone"
+                type="tel"
+                placeholder="510-555-1000"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="vendor-email">Email</label>
+            <div class="form-field">
+              <label for="vendor-website">Website</label>
 
-                        <input id="vendor-email" name="email" type="email" placeholder="amy@example.com" />
-                    </div>
+              <input
+                id="vendor-website"
+                name="website"
+                type="url"
+                placeholder="https://example.com"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="vendor-phone">Phone</label>
+            <div class="form-field">
+              <label for="product-categories"> Main Product Categories </label>
 
-                        <input id="vendor-phone" name="phone" type="tel" placeholder="510-555-1000" />
-                    </div>
+              <input
+                id="product-categories"
+                name="productCategories"
+                type="text"
+                placeholder="Frozen fruit, puree, packaging"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="vendor-website">Website</label>
+            <div class="form-field">
+              <label for="vendor-rating">Personal Rating</label>
 
-                        <input id="vendor-website" name="website" type="url" placeholder="https://example.com" />
-                    </div>
+              <select id="vendor-rating" name="rating">
+                <option value="">Select a rating</option>
+                <option value="1">1 out of 5</option>
+                <option value="2">2 out of 5</option>
+                <option value="3">3 out of 5</option>
+                <option value="4">4 out of 5</option>
+                <option value="5">5 out of 5</option>
+              </select>
+            </div>
 
-                    <div class="form-field">
-                        <label for="product-categories">
-                            Main Product Categories
-                        </label>
+            <div class="form-field">
+              <label for="associated-skus">Associated SKUs</label>
 
-                        <input id="product-categories" name="productCategories" type="text"
-                            placeholder="Frozen fruit, puree, packaging" />
-                    </div>
+              <input
+                id="associated-skus"
+                name="associatedSkus"
+                type="text"
+                placeholder="SKU-001, SKU-002"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="vendor-rating">Personal Rating</label>
+            <div class="form-field form-field-full">
+              <label for="delivery-performance"> Delivery Performance </label>
 
-                        <select id="vendor-rating" name="rating">
-                            <option value="">Select a rating</option>
-                            <option value="1">1 out of 5</option>
-                            <option value="2">2 out of 5</option>
-                            <option value="3">3 out of 5</option>
-                            <option value="4">4 out of 5</option>
-                            <option value="5">5 out of 5</option>
-                        </select>
-                    </div>
+              <textarea
+                id="delivery-performance"
+                name="deliveryPerformance"
+                rows="3"
+                placeholder="Example: Some delays during peak season"
+              ></textarea>
+            </div>
 
-                    <div class="form-field">
-                        <label for="associated-skus">Associated SKUs</label>
+            <div class="form-field form-field-full">
+              <label for="vendor-notes">General Notes</label>
 
-                        <input id="associated-skus" name="associatedSkus" type="text" placeholder="SKU-001, SKU-002" />
-                    </div>
+              <textarea
+                id="vendor-notes"
+                name="notes"
+                rows="4"
+                placeholder="Add pricing, communication, product, or sourcing notes"
+              ></textarea>
+            </div>
+          </div>
 
-                    <div class="form-field form-field-full">
-                        <label for="delivery-performance">
-                            Delivery Performance
-                        </label>
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Save Vendor</button>
 
-                        <textarea id="delivery-performance" name="deliveryPerformance" rows="3"
-                            placeholder="Example: Some delays during peak season"></textarea>
-                    </div>
+            <button class="secondary-button" type="reset">Clear Form</button>
+          </div>
+        </form>
+      </section>
 
-                    <div class="form-field form-field-full">
-                        <label for="vendor-notes">General Notes</label>
+      <section class="search-section" aria-label="Search vendors">
+        <label for="vendor-search">Search Vendors</label>
 
-                        <textarea id="vendor-notes" name="notes" rows="4"
-                            placeholder="Add pricing, communication, product, or sourcing notes"></textarea>
-                    </div>
-                </div>
+        <input
+          id="vendor-search"
+          name="vendor-search"
+          type="search"
+          placeholder="Search by vendor name or product category"
+        />
+      </section>
 
-                <div class="form-actions">
-                    <button class="primary-button" type="submit">
-                        Save Vendor
-                    </button>
+      <section class="vendor-list-section">
+        <h2>Vendor List</h2>
 
-                    <button class="secondary-button" type="reset">
-                        Clear Form
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <section class="search-section" aria-label="Search vendors">
-            <label for="vendor-search">Search Vendors</label>
-
-            <input id="vendor-search" name="vendor-search" type="search"
-                placeholder="Search by vendor name or product category" />
-        </section>
-
-        <section class="vendor-list-section">
-            <h2>Vendor List</h2>
-
-            <div id="vendor-list" class="vendor-grid"></div>
-
-        </section>
+        <div id="vendor-list" class="vendor-grid"></div>
+      </section>
     </main>
 
     <script type="module" src="./js/vendors.js"></script>
-</body>
-
+  </body>
 </html>

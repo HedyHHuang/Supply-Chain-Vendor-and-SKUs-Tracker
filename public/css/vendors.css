@@ -1,157 +1,157 @@
 .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .page-header h1 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .page-header p {
-    max-width: 700px;
-    margin: 0;
+  max-width: 700px;
+  margin: 0;
 }
 
 .primary-button {
-    padding: 12px 18px;
-    color: #ffffff;
-    font: inherit;
-    font-weight: 600;
-    background-color: #1d4ed8;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  padding: 12px 18px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  background-color: #1d4ed8;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .primary-button:hover {
-    background-color: #1e40af;
+  background-color: #1e40af;
 }
 
 .search-section {
-    padding: 24px;
-    background-color: #ffffff;
-    border: 1px solid #dbe3ec;
-    border-radius: 12px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
 }
 
 .search-section label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .search-section input {
-    width: 100%;
-    padding: 12px;
-    font: inherit;
-    border: 1px solid #b8c4d1;
-    border-radius: 6px;
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  border: 1px solid #b8c4d1;
+  border-radius: 6px;
 }
 
 .vendor-list-section h2 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .vendor-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .vendor-card {
-    padding: 24px;
-    background-color: #ffffff;
-    border: 1px solid #dbe3ec;
-    border-radius: 12px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
 }
 
 .vendor-card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .vendor-card h3 {
-    margin: 0;
+  margin: 0;
 }
 
 .vendor-category {
-    margin-top: 4px;
-    color: #5b6775;
+  margin-top: 4px;
+  color: #5b6775;
 }
 
 .vendor-rating {
-    margin: 0;
-    font-size: 1.25rem;
+  margin: 0;
+  font-size: 1.25rem;
 }
 
 .vendor-details {
-    margin: 24px 0;
+  margin: 24px 0;
 }
 
 .vendor-details div {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .vendor-details dt {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .vendor-details dd {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .sku-section h4 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .sku-list {
-    display: flex;
-    gap: 16px;
-    padding-left: 0;
-    list-style: none;
+  display: flex;
+  gap: 16px;
+  padding-left: 0;
+  list-style: none;
 }
 
 .card-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .card-actions button {
-    padding: 8px 14px;
-    font: inherit;
-    background-color: #ffffff;
-    border: 1px solid #9aa7b5;
-    border-radius: 6px;
-    cursor: pointer;
+  padding: 8px 14px;
+  font: inherit;
+  background-color: #ffffff;
+  border: 1px solid #9aa7b5;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .card-actions button:hover {
-    background-color: #edf2f7;
+  background-color: #edf2f7;
 }
 
 .empty-message {
-    grid-column: 1 / -1;
-    padding: 24px;
-    text-align: center;
-    color: #5b6775;
-    background-color: #ffffff;
-    border: 1px solid #dbe3ec;
-    border-radius: 12px;
+  grid-column: 1 / -1;
+  padding: 24px;
+  text-align: center;
+  color: #5b6775;
+  background-color: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
 }
 
 @media (max-width: 800px) {
-    .page-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 
-    .vendor-grid {
-        grid-template-columns: 1fr;
-    }
+  .vendor-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -10,114 +9,154 @@
     <link rel="stylesheet" href="./css/base.css" />
     <link rel="stylesheet" href="./css/forms.css" />
     <link rel="stylesheet" href="./css/items.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <nav aria-label="Main navigation">
-            <a href="./index.html">Home</a>
-            <a href="./vendors.html">Vendors</a>
-            <a href="./items.html">Items</a>
-        </nav>
+      <nav aria-label="Main navigation">
+        <a href="./index.html">Home</a>
+        <a href="./vendors.html">Vendors</a>
+        <a href="./items.html">Items</a>
+      </nav>
     </header>
 
     <main>
-        <section class="page-header">
-            <div>
-                <h1>SKU Management</h1>
+      <section class="page-header">
+        <div>
+          <h1>SKU Management</h1>
 
-                <p>
-                    Manage product and material records and view the vendors associated
-                    with each SKU.
-                </p>
+          <p>
+            Manage product and material records and view the vendors associated
+            with each SKU.
+          </p>
+        </div>
+
+        <button id="show-item-form-button" class="primary-button" type="button">
+          + New SKU
+        </button>
+      </section>
+
+      <section
+        id="item-form-panel"
+        class="form-panel hidden"
+        aria-labelledby="item-form-heading"
+      >
+        <div class="form-header">
+          <h2 id="item-form-heading">Add a New SKU</h2>
+
+          <p>
+            Enter the SKU number, product information, sourcing notes, and
+            associated vendors.
+          </p>
+        </div>
+
+        <form id="item-form">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="sku-number">SKU Number</label>
+
+              <input
+                id="sku-number"
+                name="sku"
+                type="text"
+                placeholder="Example: SKU-001"
+                required
+              />
             </div>
 
-            <button id="show-item-form-button" class="primary-button" type="button">
-                + New SKU
-            </button>
-        </section>
+            <div class="form-field">
+              <label for="item-name">Item Name</label>
 
-        <section id="item-form-panel" class="form-panel hidden" aria-labelledby="item-form-heading">
-            <div class="form-header">
-                <h2 id="item-form-heading">Add a New SKU</h2>
-
-                <p>
-                    Enter the SKU number, product information, sourcing notes, and
-                    associated vendors.
-                </p>
+              <input
+                id="item-name"
+                name="itemName"
+                type="text"
+                placeholder="Example: Frozen Mango Chunks"
+                required
+              />
             </div>
 
-            <form id="item-form">
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="sku-number">SKU Number</label>
+            <div class="form-field">
+              <label for="item-category">Category</label>
 
-                        <input id="sku-number" name="sku" type="text" placeholder="Example: SKU-001" required />
-                    </div>
+              <input
+                id="item-category"
+                name="category"
+                type="text"
+                placeholder="Example: Frozen Fruit"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="item-name">Item Name</label>
+            <div class="form-field">
+              <label for="item-unit">Unit</label>
 
-                        <input id="item-name" name="itemName" type="text" placeholder="Example: Frozen Mango Chunks"
-                            required />
-                    </div>
+              <input
+                id="item-unit"
+                name="unit"
+                type="text"
+                placeholder="Example: 30 lb case"
+              />
+            </div>
 
-                    <div class="form-field">
-                        <label for="item-category">Category</label>
+            <div class="form-field form-field-full">
+              <label for="item-description">Description</label>
 
-                        <input id="item-category" name="category" type="text" placeholder="Example: Frozen Fruit" />
-                    </div>
+              <textarea
+                id="item-description"
+                name="description"
+                rows="3"
+                placeholder="Describe the item or material"
+              ></textarea>
+            </div>
 
-                    <div class="form-field">
-                        <label for="item-unit">Unit</label>
+            <div class="form-field form-field-full">
+              <label for="associated-vendors">Associated Vendors</label>
 
-                        <input id="item-unit" name="unit" type="text" placeholder="Example: 30 lb case" />
-                    </div>
+              <input
+                id="associated-vendors"
+                name="associatedVendors"
+                type="text"
+                placeholder="Pacific Food Supply, Golden Produce"
+              />
+            </div>
 
-                    <div class="form-field form-field-full">
-                        <label for="item-description">Description</label>
+            <div class="form-field form-field-full">
+              <label for="item-notes">General Notes</label>
 
-                        <textarea id="item-description" name="description" rows="3"
-                            placeholder="Describe the item or material"></textarea>
-                    </div>
+              <textarea
+                id="item-notes"
+                name="notes"
+                rows="4"
+                placeholder="Add storage, quality, sourcing, or product notes"
+              ></textarea>
+            </div>
+          </div>
 
-                    <div class="form-field form-field-full">
-                        <label for="associated-vendors">Associated Vendors</label>
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Save SKU</button>
+            <button class="secondary-button" type="reset">Clear Form</button>
+          </div>
+        </form>
+      </section>
 
-                        <input id="associated-vendors" name="associatedVendors" type="text"
-                            placeholder="Pacific Food Supply, Golden Produce" />
-                    </div>
+      <section class="search-section" aria-label="Search SKUs">
+        <label for="item-search">Search SKUs</label>
 
-                    <div class="form-field form-field-full">
-                        <label for="item-notes">General Notes</label>
+        <input
+          id="item-search"
+          name="item-search"
+          type="search"
+          placeholder="Search by SKU number, item name, or category"
+        />
+      </section>
 
-                        <textarea id="item-notes" name="notes" rows="4"
-                            placeholder="Add storage, quality, sourcing, or product notes"></textarea>
-                    </div>
-                </div>
+      <section class="item-list-section">
+        <h2>SKU List</h2>
 
-                <div class="form-actions">
-                    <button class="primary-button" type="submit">Save SKU</button>
-                    <button class="secondary-button" type="reset">Clear Form</button>
-                </div>
-            </form>
-        </section>
-
-        <section class="search-section" aria-label="Search SKUs">
-            <label for="item-search">Search SKUs</label>
-
-            <input id="item-search" name="item-search" type="search"
-                placeholder="Search by SKU number, item name, or category" />
-        </section>
-
-        <section class="item-list-section">
-            <h2>SKU List</h2>
-
-            <div id="item-list" class="item-grid"></div>
-        </section>
+        <div id="item-list" class="item-grid"></div>
+      </section>
     </main>
 
     <script type="module" src="./js/items.js"></script>
-</body>
-
+  </body>
 </html>

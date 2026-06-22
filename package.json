@@ -1,0 +1,35 @@
+{
+  "name": "supply-chain-vendor-and-skus-tracker",
+  "version": "1.0.0",
+  "description": "A vendor and SKU knowledge base for supply chain professionals and sourcing brokers",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HedyHHuang/Supply-Chain-Vendor-and-SKUs-Tracker.git"
+  },
+  "keywords": [],
+  "author": "Han Huang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HedyHHuang/Supply-Chain-Vendor-and-SKUs-Tracker/issues"
+  },
+  "homepage": "https://github.com/HedyHHuang/Supply-Chain-Vendor-and-SKUs-Tracker#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.5.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.4"
+  }
+}

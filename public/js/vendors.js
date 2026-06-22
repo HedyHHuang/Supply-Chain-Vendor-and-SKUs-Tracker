@@ -1,54 +1,68 @@
 import { setupFormToggle } from "./form-toggle.js";
-import { vendors } from "./mock-data.js";
+let vendors = [];
 
 setupFormToggle({
-    buttonSelector: "#show-vendor-form-button",
-    panelSelector: "#vendor-form-panel",
-    openText: "+ New Vendor",
-    closeText: "Close Form",
+  buttonSelector: "#show-vendor-form-button",
+  panelSelector: "#vendor-form-panel",
+  openText: "+ New Vendor",
+  closeText: "Close Form",
 });
 
 const vendorList = document.querySelector("#vendor-list");
 const vendorSearchInput = document.querySelector("#vendor-search");
 const vendorForm = document.querySelector("#vendor-form");
 const vendorFormPanel = document.querySelector("#vendor-form-panel");
-const showVendorFormButton = document.querySelector(
-    "#show-vendor-form-button",
-);
-const vendorFormHeading = document.querySelector(
-    "#vendor-form-heading",
-);
-const vendorSubmitButton = vendorForm.querySelector(
-    'button[type="submit"]',
-);
+const showVendorFormButton = document.querySelector("#show-vendor-form-button");
+const vendorFormHeading = document.querySelector("#vendor-form-heading");
+const vendorSubmitButton = vendorForm.querySelector('button[type="submit"]');
 
 let editingVendorId = null;
+async function fetchVendors() {
+  try {
+    const response = await fetch("/api/vendors");
+
+    if (!response.ok) {
+      throw new Error("Unable to load vendors.");
+    }
+
+    vendors = await response.json();
+    renderVendors(vendors);
+  } catch (error) {
+    console.error(error);
+
+    vendorList.innerHTML = `
+      <p class="empty-message">
+        Unable to load vendor data.
+      </p>
+    `;
+  }
+}
 
 function createRatingStars(rating) {
-    const filledStars = "★".repeat(rating);
-    const emptyStars = "☆".repeat(5 - rating);
+  const filledStars = "★".repeat(rating);
+  const emptyStars = "☆".repeat(5 - rating);
 
-    return filledStars + emptyStars;
+  return filledStars + emptyStars;
 }
 
 function createSkuList(associatedSkus) {
-    if (associatedSkus.length === 0) {
-        return "<li>No associated SKUs</li>";
-    }
+  if (associatedSkus.length === 0) {
+    return "<li>No associated SKUs</li>";
+  }
 
-    return associatedSkus
-        .map(
-            (sku) => `
+  return associatedSkus
+    .map(
+      (sku) => `
         <li>
           <a href="./items.html">${sku}</a>
         </li>
       `,
-        )
-        .join("");
+    )
+    .join("");
 }
 
 function createVendorCard(vendor) {
-    return `
+  return `
     <article class="vendor-card" data-vendor-id="${vendor.id}">
       <div class="vendor-card-header">
         <div>
@@ -121,189 +135,191 @@ function createVendorCard(vendor) {
 }
 
 function renderVendors(vendorData) {
-    if (vendorData.length === 0) {
-        vendorList.innerHTML = `
+  if (vendorData.length === 0) {
+    vendorList.innerHTML = `
       <p class="empty-message">
         No vendors match your search.
       </p>
     `;
 
-        return;
-    }
+    return;
+  }
 
-    vendorList.innerHTML = vendorData.map(createVendorCard).join("");
+  vendorList.innerHTML = vendorData.map(createVendorCard).join("");
 }
 
 function searchVendors(event) {
-    const searchTerm = event.target.value.trim().toLowerCase();
+  const searchTerm = event.target.value.trim().toLowerCase();
 
-    const filteredVendors = vendors.filter((vendor) => {
-        const vendorName = vendor.vendorName.toLowerCase();
-        const categories = vendor.productCategories.toLowerCase();
-        const contactPerson = vendor.contactPerson.toLowerCase();
+  const filteredVendors = vendors.filter((vendor) => {
+    const vendorName = vendor.vendorName.toLowerCase();
+    const categories = vendor.productCategories.toLowerCase();
+    const contactPerson = vendor.contactPerson.toLowerCase();
 
-        return (
-            vendorName.includes(searchTerm) ||
-            categories.includes(searchTerm) ||
-            contactPerson.includes(searchTerm)
-        );
-    });
+    return (
+      vendorName.includes(searchTerm) ||
+      categories.includes(searchTerm) ||
+      contactPerson.includes(searchTerm)
+    );
+  });
 
-    renderVendors(filteredVendors);
+  renderVendors(filteredVendors);
 }
 
 function resetVendorForm() {
-    editingVendorId = null;
+  editingVendorId = null;
 
-    vendorForm.reset();
-    vendorFormHeading.textContent = "Add a New Vendor";
-    vendorSubmitButton.textContent = "Save Vendor";
+  vendorForm.reset();
+  vendorFormHeading.textContent = "Add a New Vendor";
+  vendorSubmitButton.textContent = "Save Vendor";
 
-    vendorFormPanel.classList.add("hidden");
-    showVendorFormButton.textContent = "+ New Vendor";
+  vendorFormPanel.classList.add("hidden");
+  showVendorFormButton.textContent = "+ New Vendor";
 }
 
-function saveVendor(event) {
-    event.preventDefault();
+async function saveVendor(event) {
+  event.preventDefault();
 
-    const formData = new FormData(vendorForm);
+  const formData = new FormData(vendorForm);
 
-    const associatedSkusText = formData
-        .get("associatedSkus")
-        .trim();
+  const associatedSkusText = formData.get("associatedSkus").trim();
 
-    const associatedSkus = associatedSkusText
-        ? associatedSkusText
-            .split(",")
-            .map((sku) => sku.trim())
-            .filter((sku) => sku !== "")
-        : [];
+  const associatedSkus = associatedSkusText
+    ? associatedSkusText
+        .split(",")
+        .map((sku) => sku.trim())
+        .filter((sku) => sku !== "")
+    : [];
 
-    const vendorData = {
-        vendorName: formData.get("vendorName").trim(),
-        contactPerson: formData.get("contactPerson").trim(),
-        email: formData.get("email").trim(),
-        phone: formData.get("phone").trim(),
-        website: formData.get("website").trim(),
-        productCategories: formData
-            .get("productCategories")
-            .trim(),
-        rating: Number(formData.get("rating")) || 0,
-        deliveryPerformance: formData
-            .get("deliveryPerformance")
-            .trim(),
-        notes: formData.get("notes").trim(),
-        associatedSkus,
-    };
+  const vendorData = {
+    vendorName: formData.get("vendorName").trim(),
+    contactPerson: formData.get("contactPerson").trim(),
+    email: formData.get("email").trim(),
+    phone: formData.get("phone").trim(),
+    website: formData.get("website").trim(),
+    productCategories: formData.get("productCategories").trim(),
+    rating: Number(formData.get("rating")) || 0,
+    deliveryPerformance: formData.get("deliveryPerformance").trim(),
+    notes: formData.get("notes").trim(),
+    associatedSkus,
+  };
+
+  try {
+    let response;
 
     if (editingVendorId) {
-        const vendorIndex = vendors.findIndex(
-            (vendor) => vendor.id === editingVendorId,
-        );
-
-        if (vendorIndex !== -1) {
-            vendors[vendorIndex] = {
-                ...vendors[vendorIndex],
-                ...vendorData,
-            };
-        }
+      response = await fetch(`/api/vendors/${editingVendorId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(vendorData),
+      });
     } else {
-        const newVendor = {
-            id: `vendor-${Date.now()}`,
-            ...vendorData,
-        };
-
-        vendors.push(newVendor);
+      response = await fetch("/api/vendors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(vendorData),
+      });
     }
 
-    renderVendors(vendors);
+    if (!response.ok) {
+      throw new Error("Unable to save vendor.");
+    }
+
+    await fetchVendors();
     resetVendorForm();
+  } catch (error) {
+    console.error(error);
+    window.alert("Unable to save the vendor.");
+  }
 }
 
 function editVendor(vendorId) {
-    const vendorToEdit = vendors.find(
-        (vendor) => vendor.id === vendorId,
-    );
+  const vendorToEdit = vendors.find((vendor) => vendor.id === vendorId);
 
-    if (!vendorToEdit) {
-        return;
-    }
+  if (!vendorToEdit) {
+    return;
+  }
 
-    editingVendorId = vendorId;
+  editingVendorId = vendorId;
 
-    vendorForm.elements.vendorName.value =
-        vendorToEdit.vendorName;
-    vendorForm.elements.contactPerson.value =
-        vendorToEdit.contactPerson;
-    vendorForm.elements.email.value = vendorToEdit.email;
-    vendorForm.elements.phone.value = vendorToEdit.phone;
-    vendorForm.elements.website.value = vendorToEdit.website;
-    vendorForm.elements.productCategories.value =
-        vendorToEdit.productCategories;
-    vendorForm.elements.rating.value = vendorToEdit.rating;
-    vendorForm.elements.deliveryPerformance.value =
-        vendorToEdit.deliveryPerformance;
-    vendorForm.elements.notes.value = vendorToEdit.notes;
-    vendorForm.elements.associatedSkus.value =
-        vendorToEdit.associatedSkus.join(", ");
+  vendorForm.elements.vendorName.value = vendorToEdit.vendorName;
+  vendorForm.elements.contactPerson.value = vendorToEdit.contactPerson;
+  vendorForm.elements.email.value = vendorToEdit.email;
+  vendorForm.elements.phone.value = vendorToEdit.phone;
+  vendorForm.elements.website.value = vendorToEdit.website;
+  vendorForm.elements.productCategories.value = vendorToEdit.productCategories;
+  vendorForm.elements.rating.value = vendorToEdit.rating;
+  vendorForm.elements.deliveryPerformance.value =
+    vendorToEdit.deliveryPerformance;
+  vendorForm.elements.notes.value = vendorToEdit.notes;
+  vendorForm.elements.associatedSkus.value =
+    vendorToEdit.associatedSkus.join(", ");
 
-    vendorFormHeading.textContent = "Edit Vendor";
-    vendorSubmitButton.textContent = "Update Vendor";
+  vendorFormHeading.textContent = "Edit Vendor";
+  vendorSubmitButton.textContent = "Update Vendor";
 
-    vendorFormPanel.classList.remove("hidden");
-    showVendorFormButton.textContent = "Close Form";
+  vendorFormPanel.classList.remove("hidden");
+  showVendorFormButton.textContent = "Close Form";
 
-    vendorFormPanel.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-    });
+  vendorFormPanel.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 }
 
-function deleteVendor(vendorId) {
-    const vendorIndex = vendors.findIndex(
-        (vendor) => vendor.id === vendorId,
-    );
+async function deleteVendor(vendorId) {
+  const vendorToDelete = vendors.find((vendor) => vendor.id === vendorId);
 
-    if (vendorIndex === -1) {
-        return;
+  if (!vendorToDelete) {
+    return;
+  }
+
+  const userConfirmed = window.confirm(
+    `Are you sure you want to delete ${vendorToDelete.vendorName}?`,
+  );
+
+  if (!userConfirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/vendors/${vendorId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to delete vendor.");
     }
 
-    const vendorToDelete = vendors[vendorIndex];
-
-    const userConfirmed = window.confirm(
-        `Are you sure you want to delete ${vendorToDelete.vendorName}?`,
-    );
-
-    if (!userConfirmed) {
-        return;
-    }
-
-    vendors.splice(vendorIndex, 1);
-    renderVendors(vendors);
+    await fetchVendors();
+  } catch (error) {
+    console.error(error);
+    window.alert("Unable to delete the vendor.");
+  }
 }
 
 function handleVendorListClick(event) {
-    const editButton = event.target.closest(
-        ".edit-vendor-button",
-    );
-    const deleteButton = event.target.closest(
-        ".delete-vendor-button",
-    );
+  const editButton = event.target.closest(".edit-vendor-button");
+  const deleteButton = event.target.closest(".delete-vendor-button");
 
-    if (editButton) {
-        const vendorId = editButton.dataset.vendorId;
-        editVendor(vendorId);
-        return;
-    }
+  if (editButton) {
+    const vendorId = editButton.dataset.vendorId;
+    editVendor(vendorId);
+    return;
+  }
 
-    if (deleteButton) {
-        const vendorId = deleteButton.dataset.vendorId;
-        deleteVendor(vendorId);
-    }
+  if (deleteButton) {
+    const vendorId = deleteButton.dataset.vendorId;
+    deleteVendor(vendorId);
+  }
 }
 
 vendorSearchInput.addEventListener("input", searchVendors);
 vendorForm.addEventListener("submit", saveVendor);
 vendorList.addEventListener("click", handleVendorListClick);
 
-renderVendors(vendors);
+fetchVendors();

@@ -1,11 +1,11 @@
 import { setupFormToggle } from "./form-toggle.js";
-import { items } from "./mock-data.js";
+let items = [];
 
 setupFormToggle({
-    buttonSelector: "#show-item-form-button",
-    panelSelector: "#item-form-panel",
-    openText: "+ New SKU",
-    closeText: "Close Form",
+  buttonSelector: "#show-item-form-button",
+  panelSelector: "#item-form-panel",
+  openText: "+ New SKU",
+  closeText: "Close Form",
 });
 
 const itemList = document.querySelector("#item-list");
@@ -13,33 +13,49 @@ const itemSearchInput = document.querySelector("#item-search");
 const itemForm = document.querySelector("#item-form");
 const itemFormPanel = document.querySelector("#item-form-panel");
 const itemFormHeading = document.querySelector("#item-form-heading");
-const showItemFormButton = document.querySelector(
-    "#show-item-form-button",
-);
-const itemSubmitButton = itemForm.querySelector(
-    'button[type="submit"]',
-);
+const showItemFormButton = document.querySelector("#show-item-form-button");
+const itemSubmitButton = itemForm.querySelector('button[type="submit"]');
 
 let editingItemId = null;
+async function fetchItems() {
+  try {
+    const response = await fetch("/api/items");
 
-function createVendorList(associatedVendors) {
-    if (associatedVendors.length === 0) {
-        return "<li>No associated vendors</li>";
+    if (!response.ok) {
+      throw new Error("Unable to load items.");
     }
 
-    return associatedVendors
-        .map(
-            (vendorName) => `
+    items = await response.json();
+    renderItems(items);
+  } catch (error) {
+    console.error(error);
+
+    itemList.innerHTML = `
+      <p class="empty-message">
+        Unable to load item data.
+      </p>
+    `;
+  }
+}
+
+function createVendorList(associatedVendors) {
+  if (associatedVendors.length === 0) {
+    return "<li>No associated vendors</li>";
+  }
+
+  return associatedVendors
+    .map(
+      (vendorName) => `
         <li>${vendorName}</li>
       `,
-        )
-        .join("");
+    )
+    .join("");
 }
 
 function createItemCard(item) {
-    const vendorCount = item.associatedVendors.length;
+  const vendorCount = item.associatedVendors.length;
 
-    return `
+  return `
     <article class="item-card" data-item-id="${item.id}">
       <div class="item-card-header">
         <div>
@@ -83,13 +99,6 @@ function createItemCard(item) {
       </div>
 
       <div class="card-actions">
-        <button
-          class="view-item-button"
-          type="button"
-          data-item-id="${item.id}"
-        >
-          View Details
-        </button>
 
         <button
           class="edit-item-button"
@@ -112,167 +121,184 @@ function createItemCard(item) {
 }
 
 function renderItems(itemData) {
-    if (itemData.length === 0) {
-        itemList.innerHTML = `
+  if (itemData.length === 0) {
+    itemList.innerHTML = `
       <p class="empty-message">
         No SKUs match your search.
       </p>
     `;
 
-        return;
-    }
+    return;
+  }
 
-    itemList.innerHTML = itemData.map(createItemCard).join("");
+  itemList.innerHTML = itemData.map(createItemCard).join("");
 }
 
 function searchItems(event) {
-    const searchTerm = event.target.value.trim().toLowerCase();
+  const searchTerm = event.target.value.trim().toLowerCase();
 
-    const filteredItems = items.filter((item) => {
-        const sku = item.sku.toLowerCase();
-        const itemName = item.itemName.toLowerCase();
-        const category = item.category.toLowerCase();
+  const filteredItems = items.filter((item) => {
+    const sku = item.sku.toLowerCase();
+    const itemName = item.itemName.toLowerCase();
+    const category = item.category.toLowerCase();
 
-        return (
-            sku.includes(searchTerm) ||
-            itemName.includes(searchTerm) ||
-            category.includes(searchTerm)
-        );
-    });
+    return (
+      sku.includes(searchTerm) ||
+      itemName.includes(searchTerm) ||
+      category.includes(searchTerm)
+    );
+  });
 
-    renderItems(filteredItems);
+  renderItems(filteredItems);
 }
 
 function resetItemForm() {
-    editingItemId = null;
+  editingItemId = null;
 
-    itemForm.reset();
-    itemFormHeading.textContent = "Add a New SKU";
-    itemSubmitButton.textContent = "Save SKU";
+  itemForm.reset();
+  itemFormHeading.textContent = "Add a New SKU";
+  itemSubmitButton.textContent = "Save SKU";
 
-    itemFormPanel.classList.add("hidden");
-    showItemFormButton.textContent = "+ New SKU";
+  itemFormPanel.classList.add("hidden");
+  showItemFormButton.textContent = "+ New SKU";
 }
 
-function saveItem(event) {
-    event.preventDefault();
+async function saveItem(event) {
+  event.preventDefault();
 
-    const formData = new FormData(itemForm);
+  const formData = new FormData(itemForm);
 
-    const associatedVendorsText = formData
-        .get("associatedVendors")
-        .trim();
+  const associatedVendorsText = formData.get("associatedVendors").trim();
 
-    const associatedVendors = associatedVendorsText
-        ? associatedVendorsText
-            .split(",")
-            .map((vendorName) => vendorName.trim())
-            .filter((vendorName) => vendorName !== "")
-        : [];
+  const associatedVendors = associatedVendorsText
+    ? associatedVendorsText
+        .split(",")
+        .map((vendorName) => vendorName.trim())
+        .filter((vendorName) => vendorName !== "")
+    : [];
 
-    const itemData = {
-        sku: formData.get("sku").trim(),
-        itemName: formData.get("itemName").trim(),
-        category: formData.get("category").trim(),
-        unit: formData.get("unit").trim(),
-        description: formData.get("description").trim(),
-        notes: formData.get("notes").trim(),
-        associatedVendors,
-    };
+  const itemData = {
+    sku: formData.get("sku").trim(),
+    itemName: formData.get("itemName").trim(),
+    category: formData.get("category").trim(),
+    unit: formData.get("unit").trim(),
+    description: formData.get("description").trim(),
+    notes: formData.get("notes").trim(),
+    associatedVendors,
+  };
+
+  try {
+    let response;
 
     if (editingItemId) {
-        const itemIndex = items.findIndex(
-            (item) => item.id === editingItemId,
-        );
-
-        if (itemIndex !== -1) {
-            items[itemIndex] = {
-                ...items[itemIndex],
-                ...itemData,
-            };
-        }
+      response = await fetch(`/api/items/${editingItemId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(itemData),
+      });
     } else {
-        const newItem = {
-            id: `item-${Date.now()}`,
-            ...itemData,
-        };
-
-        items.push(newItem);
+      response = await fetch("/api/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(itemData),
+      });
     }
 
-    renderItems(items);
+    if (!response.ok) {
+      throw new Error("Unable to save item.");
+    }
+
+    await fetchItems();
     resetItemForm();
+  } catch (error) {
+    console.error(error);
+    window.alert("Unable to save the SKU.");
+  }
 }
 
 function editItem(itemId) {
-    const itemToEdit = items.find((item) => item.id === itemId);
+  const itemToEdit = items.find((item) => item.id === itemId);
 
-    if (!itemToEdit) {
-        return;
-    }
+  if (!itemToEdit) {
+    return;
+  }
 
-    editingItemId = itemId;
+  editingItemId = itemId;
 
-    itemForm.elements.sku.value = itemToEdit.sku;
-    itemForm.elements.itemName.value = itemToEdit.itemName;
-    itemForm.elements.category.value = itemToEdit.category;
-    itemForm.elements.unit.value = itemToEdit.unit;
-    itemForm.elements.description.value = itemToEdit.description;
-    itemForm.elements.notes.value = itemToEdit.notes;
-    itemForm.elements.associatedVendors.value =
-        itemToEdit.associatedVendors.join(", ");
+  itemForm.elements.sku.value = itemToEdit.sku;
+  itemForm.elements.itemName.value = itemToEdit.itemName;
+  itemForm.elements.category.value = itemToEdit.category;
+  itemForm.elements.unit.value = itemToEdit.unit;
+  itemForm.elements.description.value = itemToEdit.description;
+  itemForm.elements.notes.value = itemToEdit.notes;
+  itemForm.elements.associatedVendors.value =
+    itemToEdit.associatedVendors.join(", ");
 
-    itemFormHeading.textContent = "Edit SKU";
-    itemSubmitButton.textContent = "Update SKU";
+  itemFormHeading.textContent = "Edit SKU";
+  itemSubmitButton.textContent = "Update SKU";
 
-    itemFormPanel.classList.remove("hidden");
-    showItemFormButton.textContent = "Close Form";
+  itemFormPanel.classList.remove("hidden");
+  showItemFormButton.textContent = "Close Form";
 
-    itemFormPanel.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-    });
+  itemFormPanel.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 }
 
-function deleteItem(itemId) {
-    const itemIndex = items.findIndex((item) => item.id === itemId);
+async function deleteItem(itemId) {
+  const itemToDelete = items.find((item) => item.id === itemId);
 
-    if (itemIndex === -1) {
-        return;
+  if (!itemToDelete) {
+    return;
+  }
+
+  const userConfirmed = window.confirm(
+    `Are you sure you want to delete ${itemToDelete.sku} - ${itemToDelete.itemName}?`,
+  );
+
+  if (!userConfirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/items/${itemId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to delete item.");
     }
 
-    const itemToDelete = items[itemIndex];
-
-    const userConfirmed = window.confirm(
-        `Are you sure you want to delete ${itemToDelete.sku} - ${itemToDelete.itemName}?`,
-    );
-
-    if (!userConfirmed) {
-        return;
-    }
-
-    items.splice(itemIndex, 1);
-    renderItems(items);
+    await fetchItems();
+  } catch (error) {
+    console.error(error);
+    window.alert("Unable to delete the SKU.");
+  }
 }
 
 function handleItemListClick(event) {
-    const editButton = event.target.closest(".edit-item-button");
-    const deleteButton = event.target.closest(".delete-item-button");
+  const editButton = event.target.closest(".edit-item-button");
+  const deleteButton = event.target.closest(".delete-item-button");
 
-    if (editButton) {
-        const itemId = editButton.dataset.itemId;
-        editItem(itemId);
-        return;
-    }
+  if (editButton) {
+    const itemId = editButton.dataset.itemId;
+    editItem(itemId);
+    return;
+  }
 
-    if (deleteButton) {
-        const itemId = deleteButton.dataset.itemId;
-        deleteItem(itemId);
-    }
+  if (deleteButton) {
+    const itemId = deleteButton.dataset.itemId;
+    deleteItem(itemId);
+  }
 }
 
 itemSearchInput.addEventListener("input", searchItems);
 itemForm.addEventListener("submit", saveItem);
 itemList.addEventListener("click", handleItemListClick);
 
-renderItems(items);
+fetchItems();
