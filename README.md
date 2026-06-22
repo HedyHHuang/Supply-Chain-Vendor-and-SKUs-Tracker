@@ -20,6 +20,10 @@ The application helps supply chain professionals, buyers, and sourcing brokers s
 **Class link**
 https://johnguerra.co/classes/webDevelopment_online_summer_2026/
 
+## Live Website
+
+[Open the deployed application](https://supply-chain-vendor-and-skus-tracker.onrender.com/)
+
 ## Screenshots
 
 ### Home Page
@@ -78,26 +82,26 @@ https://johnguerra.co/classes/webDevelopment_online_summer_2026/
 
 ## Project Structure
 
-```text
-Supply-Chain-Vendor-and-SKUs-Tracker/
-├── db/
-│   ├── mongo.js
-│   └── seed.js
-├── public/
-│   ├── css/
-│   ├── js/
-│   ├── index.html
-│   ├── vendors.html
-│   └── items.html
-├── routes/
-│   ├── vendors.js
-│   └── items.js
-├── docker-compose.yml
-├── eslint.config.js
-├── package.json
-├── server.js
-└── README.md
-```
+The project separates frontend pages, CSS, JavaScript modules, backend routes, database files, and documentation into different folders. The main files are:
+
+- public/index.html: home page
+- public/vendors.html: vendor management page
+- public/items.html: SKU and item management page
+- public/css/base.css: shared page styles
+- public/css/forms.css: shared form styles
+- public/css/home.css: home page styles
+- public/css/vendors.css: vendor page styles
+- public/css/items.css: item page styles
+- public/js/form-toggle.js: reusable form visibility logic
+- public/js/vendors.js: vendor page rendering and CRUD requests
+- public/js/items.js: item page rendering and CRUD requests
+- routes/vendors.js: Express API routes for vendor CRUD operations
+- routes/items.js: Express API routes for item CRUD operations
+- db/mongo.js: MongoDB connection module
+- db/seed.js: initial database seed script
+- docs/design-document.md: project design document
+- server.js: Express application entry file
+- docker-compose.yml: local MongoDB Docker configuration
 
 ## Installation
 
