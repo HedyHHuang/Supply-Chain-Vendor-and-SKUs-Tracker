@@ -30,7 +30,7 @@ const vendors = [
   },
 ];
 
-const items = [
+const initialItems = [
   {
     id: "item-001",
     sku: "SKU-001",
@@ -53,6 +53,48 @@ const items = [
   },
 ];
 
+const categories = [
+  "Frozen Fruit",
+  "Fruit Puree",
+  "Dairy",
+  "Tea",
+  "Packaging",
+  "Sweetener",
+];
+
+const units = [
+  "10 lb case",
+  "20 lb case",
+  "30 lb case",
+  "5 kg case",
+  "12 bottles",
+  "24 units",
+];
+
+const generatedItems = Array.from(
+  {
+    length: 1000,
+  },
+  (_, index) => {
+    const itemNumber = index + 3;
+    const paddedNumber = String(itemNumber).padStart(4, "0");
+
+    return {
+      id: `item-${paddedNumber}`,
+      sku: `SKU-${paddedNumber}`,
+      itemName: `Sample Supply Chain Item ${itemNumber}`,
+      category: categories[index % categories.length],
+      unit: units[index % units.length],
+      description: `Sample product record ${itemNumber} created for database testing.`,
+      notes: "Generated sample record for the project database.",
+      associatedVendors:
+        index % 2 === 0 ? ["Pacific Food Supply"] : ["Golden Produce"],
+    };
+  },
+);
+
+const items = [...initialItems, ...generatedItems];
+
 async function seedDatabase() {
   try {
     const database = await connectToDatabase();
@@ -66,7 +108,9 @@ async function seedDatabase() {
     await vendorCollection.insertMany(vendors);
     await itemCollection.insertMany(items);
 
-    console.log("Vendor and item data added successfully.");
+    console.log(`${vendors.length} vendors added.`);
+    console.log(`${items.length} items added.`);
+    console.log(`${vendors.length + items.length} total records added.`);
 
     process.exit(0);
   } catch (error) {

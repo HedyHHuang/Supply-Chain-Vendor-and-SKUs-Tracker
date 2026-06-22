@@ -3,11 +3,23 @@ import { getDatabase } from "../db/mongo.js";
 
 const router = express.Router();
 
-// Read all items
+// Read items
 router.get("/", async (request, response) => {
   try {
     const database = getDatabase();
-    const items = await database.collection("items").find({}).toArray();
+
+    const requestedLimit = Number(request.query.limit) || 100;
+    const requestedSkip = Number(request.query.skip) || 0;
+
+    const limit = Math.min(Math.max(requestedLimit, 1), 200);
+    const skip = Math.max(requestedSkip, 0);
+
+    const items = await database
+      .collection("items")
+      .find({})
+      .skip(skip)
+      .limit(limit)
+      .toArray();
 
     response.json(items);
   } catch (error) {
