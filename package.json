@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/HedyHHuang/Supply-Chain-Vendor-and-SKUs-Tracker#readme",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongodb": "^7.3.0"
   },

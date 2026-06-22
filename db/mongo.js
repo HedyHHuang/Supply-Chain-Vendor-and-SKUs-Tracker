@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-const mongoUrl = "mongodb://localhost:27017";
+const mongoUrl = process.env.MONGODB_URI || "mongodb://localhost:27017";
 const databaseName = "supplyChainTracker";
 
 const client = new MongoClient(mongoUrl);

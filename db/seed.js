@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { connectToDatabase } from "./mongo.js";
 
 const vendors = [
