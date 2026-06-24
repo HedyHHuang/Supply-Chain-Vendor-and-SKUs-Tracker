@@ -208,3 +208,9 @@ POST   /api/items
 PUT    /api/items/:id
 DELETE /api/items/:id
 ```
+
+## AI Assistance
+
+```text
+AI was used only as a support tool when I had questions during the development process, such as understanding errors, debugging, and improving documentation.
+```
